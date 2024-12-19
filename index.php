@@ -172,44 +172,78 @@ include "./config/db_connect.php";
                 mysqli_free_result($result); // free result set 
               }
 
-            // close connection 
+              // close connection 
               ?>
               <?php
-              // $theName = "";
-              // $thePosition = "";
-              // $therating = "";
-              $theName = "";
-              $thePosition = "";
-              $therating = "";
-              $errorMessage = "";
-
-              // if($_SERVER['REQUEST_METHOD'] == 'POST'){
-              //     $theName = $_POST['theName'];
-              //     $thePosition = $_POST['thePosition'];
-              //     $therating = $_POST['theRating'];
-
-              // };
-
-              // if (empty($theName) || empty($thePosition) || empty($therating))
-              // {
-              //     $errorMessage = "All fields are required!";
-              //     break;
-
-              // };
 
               if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                $theName = $_POST['theName'] ?? '';
-                $thePosition = $_POST['thePosition'] ?? '';
-                $therating = $_POST['theRating'] ?? '';
+                $name = $_POST['name'];
+                $position = $_POST['position'];
+                $flag = $_POST['flag'];
+                $club = $_POST['club'];
+                $rating = $_POST['rating'];
+                $photo = $_POST['photo'];
+                $logo = $_POST['logo'];
 
-                if (empty($theName) || empty($thePosition) || empty($therating)) {
-                  $errorMessage = "All fields are required!";
+                $pace = $_POST['pacing'];
+                $shooting = $_POST['shooting'];
+                $passing = $_POST['passing'];
+                $dribbling = $_POST['dribbling'];
+                $defending = $_POST['defending'];
+                $physical = $_POST['physical'];
+
+                $diving = $_POST['diving'];
+                $handling = $_POST['handling'];
+                $kicking = $_POST['kicking'];
+                $reflexes = $_POST['reflexes'];
+                $speed = $_POST['speed'];
+                $positioning = $_POST['positioning'];
+
+                // Insert nationality
+                $sql = "INSERT INTO nationality (nom_natio, flag) VALUES ('$nationality', '$flag')";
+                $result = $conn->query($sql);
+                $nationality_id = $conn->insert_id ?: (
+                  ($result = $conn->query("SELECT id FROM nationality WHERE nom_natio = '$nationality'"))
+                  ? $result->fetch_assoc()['id']
+                  : null
+                );
+
+                // Insert club
+                $sql = "INSERT INTO clubs (name_club, logo) VALUES ('$club', '$logo')";
+                $result = $conn->query($sql);
+                $club_id = $conn->insert_id ?: (
+                  ($result = $conn->query("SELECT id FROM clubs WHERE name_club = '$club'"))
+                  ? $result->fetch_assoc()['id']
+                  : null
+                );
+
+                // Insert player
+                $sql = "INSERT INTO players (id_club, id_natio, name_player, photo, position) VALUES ('$club_id', '$nationality_id', '$name', '$photo', '$position')";
+                $result = $conn->query($sql);
+                $player_id = $conn->insert_id ?: (
+                  ($result = $conn->query("SELECT id FROM players WHERE name_player = '$name'"))
+                  ? $result->fetch_assoc()['id']
+                  : null
+                );
+
+                // Insert statistics
+                if ($position === "GK") {
+                  $sql = "INSERT INTO goalkeeper (id_player, rating, diving, handling, kicking, reflexes, speed, positioning) VALUES ('$player_id', '$rating', '$diving', '$handling', '$kicking', '$reflexes', '$speed', '$positioning')";
+                  $result = $conn->query($sql);
                 } else {
-                  // Process valid form data here
-                  // You can add database insertion code here
+                  $sql = "INSERT INTO other_players (id_player, rating, pace, shooting, passing, dribbling, defending, physical) VALUES ('$player_id', '$rating', '$pace', '$shooting', '$passing', '$dribbling', '$defending', '$physical')";
+                  $result = $conn->query($sql);
                 }
               }
+
+
+
+
+
+
+
               ?>
+
 
             </tbody>
           </table>
@@ -221,11 +255,11 @@ include "./config/db_connect.php";
 
 
     <div style="display: none;" class="form-player ">
-      <form id="add-player-form">
+      <form method="POST" action="index.php" id="add-player-form">
         <div class="flex">
           <h2>choose your formation</h2>
           <header class="navbar">
-            <button class="menu__bar menu__bar1" id="toggle-form-x" >
+            <button class="menu__bar menu__bar1" id="toggle-form-x">
               <i class="fa-solid fa-bars"></i>
             </button>
           </header>
@@ -242,10 +276,10 @@ include "./config/db_connect.php";
         <input type="url" id="player-photo" name="photo">
 
         <label for="player-name">the name:</label>
-        <input type="text" id="player-name" required>
+        <input type="text" id="player-name" name="name">
 
         <label for="player-postion">the postion:</label>
-        <select id="player-position">
+        <select id="player-position" name="position">
           <option value="">choose the postion</option>
           <option value="GK">Gardien de but (GK)</option>
           <option value="ST">Attaquant (ST)</option>
@@ -442,6 +476,7 @@ include "./config/db_connect.php";
 
 </body>
 <?php
-  mysqli_close($connection); 
+mysqli_close($connection);
 ?>
+
 </html>
