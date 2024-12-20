@@ -176,65 +176,7 @@ include "./config/db_connect.php";
               ?>
               <?php
 
-              if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                $name = $_POST['name'];
-                $position = $_POST['position'];
-                $flag = $_POST['flag'];
-                $club = $_POST['club'];
-                $rating = $_POST['rating'];
-                $photo = $_POST['photo'];
-                $logo = $_POST['logo'];
-
-                $pace = $_POST['pacing'];
-                $shooting = $_POST['shooting'];
-                $passing = $_POST['passing'];
-                $dribbling = $_POST['dribbling'];
-                $defending = $_POST['defending'];
-                $physical = $_POST['physical'];
-
-                $diving = $_POST['diving'];
-                $handling = $_POST['handling'];
-                $kicking = $_POST['kicking'];
-                $reflexes = $_POST['reflexes'];
-                $speed = $_POST['speed'];
-                $positioning = $_POST['positioning'];
-
-                // Insert nationality
-                $sql = "INSERT INTO nationality (nom_natio, flag) VALUES ('$nationality', '$flag')";
-                $result = $conn->query($sql);
-                $nationality_id = $conn->insert_id ?: (
-                  ($result = $conn->query("SELECT id FROM nationality WHERE nom_natio = '$nationality'"))
-                  ? $result->fetch_assoc()['id']
-                  : null
-                );
-
-                // Insert club
-                $sql = "INSERT INTO clubs (name_club, logo) VALUES ('$club', '$logo')";
-                $result = $conn->query($sql);
-                $club_id = $conn->insert_id ?: (
-                  ($result = $conn->query("SELECT id FROM clubs WHERE name_club = '$club'"))
-                  ? $result->fetch_assoc()['id']
-                  : null
-                );
-
-                // Insert player
-                $sql = "INSERT INTO players (id_club, id_natio, name_player, photo, position) VALUES ('$club_id', '$nationality_id', '$name', '$photo', '$position')";
-                $result = $conn->query($sql);
-                $player_id = $conn->insert_id ?: (
-                  ($result = $conn->query("SELECT id FROM players WHERE name_player = '$name'"))
-                  ? $result->fetch_assoc()['id']
-                  : null
-                );
-
-                // Insert statistics
-                if ($position === "GK") {
-                  $sql = "INSERT INTO goalkeeper (id_player, rating, diving, handling, kicking, reflexes, speed, positioning) VALUES ('$player_id', '$rating', '$diving', '$handling', '$kicking', '$reflexes', '$speed', '$positioning')";
-                  $result = $conn->query($sql);
-                } else {
-                  $sql = "INSERT INTO other_players (id_player, rating, pace, shooting, passing, dribbling, defending, physical) VALUES ('$player_id', '$rating', '$pace', '$shooting', '$passing', '$dribbling', '$defending', '$physical')";
-                  $result = $conn->query($sql);
-                }
-              }
+              
 
 
 
@@ -254,8 +196,8 @@ include "./config/db_connect.php";
 
 
 
-    <div style="display: none;" class="form-player ">
-      <form method="POST" action="index.php" id="add-player-form">
+    <!-- <div style="display: none;" class="form-player ">
+      <form method="POST" id= "player-form">
         <div class="flex">
           <h2>choose your formation</h2>
           <header class="navbar">
@@ -377,7 +319,7 @@ include "./config/db_connect.php";
 
       </form>
 
-    </div>
+    </div> -->
 
     </main>
 

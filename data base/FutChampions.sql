@@ -118,3 +118,9 @@ FROM
     players
 LEFT JOIN clubs ON players.club_id = clubs.club_id
 LEFT JOIN nationalities ON players.nationality_id = nationalities.nationality_id;
+
+
+show DATABASEs;
+use futChampions;
+show tables;
+
